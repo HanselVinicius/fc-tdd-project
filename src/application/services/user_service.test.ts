@@ -1,6 +1,8 @@
 import { UserService } from "./user_service";
 import { FakeUserRepository } from "../../infrastructure/repositories/fake_user_repository";
 import { User } from "../../domain/entities/user";
+import { CreateUserDto } from "../dtos/create_user_dto"
+
 describe("UserService", () => {
   let userService: UserService;
   let fakeUserRepository: FakeUserRepository;
@@ -31,4 +33,29 @@ describe("UserService", () => {
     expect(user?.getId()).toBe("3");
     expect(user?.getName()).toBe("Test User");
   });
+
+  it("deve criar usuario com sucesso",async () => {
+
+    const dto: CreateUserDto = {
+      name: "Test User"
+    };
+
+    const user = await userService.createUser(dto);
+    expect(user).not.toBeNull();
+    expect(user.getName()).toBe("Test User");
+  });
+
+
+it("deve falhar ao criar usuario",async () => {
+  const dto: CreateUserDto = {
+    name: ""
+  };
+
+  expect(async () => {
+    await userService.createUser(dto);
+  }).rejects.toThrow("O nome é obrigatório");
 });
+
+
+});
+
